@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<script src="{% static 'script/priceFormater.js' %}"></script>
+<div class="max-w-2xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+    <div class="bg-white shadow overflow-hidden rounded-lg">
+        <div class="px-4 py-5 sm:px-6">
+            <h1 class="text-2xl font-semibold text-gray-900">Create Menu</h1>
+            <p class="mt-1 text-sm text-gray-500">Add a new menu item to your collection.</p>
+        </div>
+        <div class="px-4 py-5 sm:p-6">
+            <form method="post">
+                {% csrf_token %}
+                
+                <div class="space-y-6">
+                    <!-- Name Field -->
+                    {% include 'menu/components/input.html' with label="Name" field="name" placeholder="Menu item name" value=name %}
+                    
+                    <!-- Price Field -->
+                    {% include 'menu/components/input.html' with label="Price (Rp)" field="price" placeholder="Rp 0" value=price%}
+                    
+                    <!-- Description Field -->
+                    {% include 'menu/components/textarea.html' with label="Description" field="description" placeholder="Describe your menu item" value=description description_input="Brief description of the menu item."%}
+                    
+                    <!-- Category Field -->
+                    {% include 'menu/components/select.html' with label="Category" id="category" name="category" default_option="Select menu category" options=categories input_value=category%}
+                </div>
+                <div class="pt-5">
+                    <div class="flex justify-end">
+                        <button type="button" class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            Cancel
+                        </button>
+                        <button type="submit" class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            Create Menu Item
+                        </button>
+                    </div>
+                </div>
+            </form>
+            {% include 'menu/components/messages.html' %}
+        </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

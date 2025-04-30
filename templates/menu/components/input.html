@@ -1,0 +1,21 @@
+<div {% if field == "price" %} x-data="priceFormatter()" x-init="init()" {% endif %}>
+    <label for="{{ field }}" class="block text-sm font-medium text-gray-700">{{ label }}</label>
+    <div class="mt-1">
+        <input 
+            type="{{type|default:'text'}}" 
+            id="{{ field }}" 
+            name="{{ field }}" 
+            class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md p-2"
+            placeholder="{{placeholder|default:''}}" 
+            value="{{value|default:''}}"
+            required={{is_required|default:True}}
+            {% if field == "price" %}
+            inputmode="numeric"
+            x-model="display"
+            @input="format"
+            @blur="format"
+            @focus="removeFormat"
+            @keypress="onlyAllowNumericInput"
+            {% endif %}>
+    </div>
+</div>

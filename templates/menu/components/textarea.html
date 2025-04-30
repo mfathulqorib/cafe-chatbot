@@ -1,0 +1,10 @@
+<div>
+    <label for="{{field}}" class="block text-sm font-medium text-gray-700">{{label}}</label>
+    <div class="mt-1">
+        <textarea id="{{field}}" name="{{field}}" rows="3"
+        placeholder="{{placeholder|default:""}}"
+        required={{is_required|default:True}}
+        class="p-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">{{value|default:''}}</textarea>
+    </div>
+    <p class="mt-2 text-sm text-gray-500">{{description_input|default:""}}</p>
+</div>
