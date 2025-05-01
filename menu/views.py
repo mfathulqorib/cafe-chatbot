@@ -1,12 +1,12 @@
 from django.shortcuts import render
 from django.views.generic import View
-from .models import Menu
+from .models import MenuItem
 from django.contrib import messages
 from django.db import IntegrityError
 
 # Create your views here.
 class CreateMenu(View):
-    categories = Menu.Category.choices
+    categories = MenuItem.Category.choices
     context = {"categories": categories}
 
     def get(self, request):
@@ -29,15 +29,15 @@ class CreateMenu(View):
             print(dict(self.context, **menu_data))
             return render(request, 'menu/create.html', dict(self.context, **menu_data))
         
-        if Menu.objects.filter(name=menu_data['name']).exists() :
+        if MenuItem.objects.filter(name=menu_data['name']).exists() :
             messages.error(request, "Menu is already registered")
             return render(request, 'menu/create.html', dict(self.context, **menu_data))
 
         try:
-            Menu.objects.create(**menu_data)
+            MenuItem.objects.create(**menu_data)
         except IntegrityError:
             messages.error(request, "Something wrong, please cek again your input")
-            return render(request, 'menu/create.html', self.context.update(**menu_data))
+            return render(request, 'menu/create.html', dict(self.context, **menu_data))
         
         messages.success(request, "Menu successfully created")
         return render(request, 'menu/create.html', self.context)

@@ -3,7 +3,7 @@ from core.models import BaseModel
 
 # Create your models here.
 
-class Menu(BaseModel):
+class MenuItem(BaseModel):
     class Category(models.TextChoices):
         DESSERT = 'dessert', 'Dessert'
         COFFEE = 'coffee', 'Coffee'
@@ -24,3 +24,4 @@ class Menu(BaseModel):
 
     def formatted_price(self):
         return f"Rp {int(self.price):,}".replace(",", ".")
+
