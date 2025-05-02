@@ -10,6 +10,8 @@
             <p class="mt-1 text-sm text-gray-500">Add a new menu item to your collection.</p>
         </div>
         <div class="px-4 py-5 sm:p-6">
+            {% include 'menu/components/messages.html' %}
+
             <form method="post">
                 {% csrf_token %}
                 
@@ -27,17 +29,16 @@
                     {% include 'menu/components/select.html' with label="Category" id="category" name="category" default_option="Select menu category" options=categories input_value=category%}
                 </div>
                 <div class="pt-5">
-                    <div class="flex justify-end">
-                        <button type="button" class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    <div class="flex justify-end space-x-3">
+                        <button type="button" class="button-secondary">
                             Cancel
                         </button>
-                        <button type="submit" class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        <button type="submit" class="button-primary">
                             Create Menu Item
                         </button>
                     </div>
                 </div>
             </form>
-            {% include 'menu/components/messages.html' %}
         </div>
         </div>
     </div>

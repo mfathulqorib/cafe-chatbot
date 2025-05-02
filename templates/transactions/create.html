@@ -28,91 +28,45 @@
     </div>
     
     <div class="px-4 py-5 sm:p-6">
-      {% if error %}
-        <div class="mb-4 rounded-md bg-red-50 p-4">
-          <div class="flex">
-            <div class="flex-shrink-0">
-              <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
-              </svg>
-            </div>
-            <div class="ml-3">
-              <p class="text-sm text-red-700">{{ error }}</p>
-            </div>
-          </div>
-        </div>
-      {% endif %}
+      <!-- Error messages -->
+      {% include 'menu/components/messages.html' %}
 
       <form method="post" x-data="transactionForm(menuItemsData, formData)">
         {% csrf_token %}
 
         <div class="space-y-6">
-            <!-- Menu Items Selection -->
-            <div>
-                <h3 class="text-lg font-medium text-gray-900">Select Menu Items</h3>
-                <p class="mt-1 text-sm text-gray-500">Choose items to add to this transaction.</p>
-                <div class="mt-4 flex items-end space-x-3">
-                    
-                    {% include 'transactions/components/select-items.html' with options=menu_items%}
-                    
-                </div>
-            </div>
-            
-            <!-- Warning Message -->
-            {% include 'transactions/components/message/warning.html'%}
+          {% include 'menu/components/input.html' with label="Date" field="date" value=name type="datetime-local" %}
 
-            <!-- Selected Items -->
-            <div x-show="items.length > 0" class="my-2">
+          <!-- Menu Items Selection -->
+          {% include 'transactions/components/select-items.html' with options=menu_items%}
+      
+          <!-- Warning Message -->
+          {% include 'transactions/components/message/warning.html'%}
+
+          <!-- Selected Items -->
+          <div x-show="items.length > 0" class="my-2">
             <h3 class="text-lg font-medium text-gray-900 mb-3">Selected Items</h3>
-            
-            {% include 'transactions/components/table.html'%}
-            
+            {% include 'transactions/components/table.html' with items=items%}
           </div>
-          
+        
           <!-- Empty State -->
-          <div x-show="!items.length" class="bg-gray-50 rounded-lg py-8 px-4 text-center">
-            <svg class="mx-auto h-12 w-12 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-            </svg>
-            <p class="mt-2 text-sm font-medium text-gray-900">No items added yet</p>
-            <p class="mt-1 text-sm text-gray-500">Select items from the menu to add them to your transaction.</p>
-          </div>
+          {% include 'transactions/components/empty-state.html'%}
 
           <!-- Payment Method -->
-          <div>
-            <h3 class="text-lg font-medium text-gray-900">Payment Method</h3>
-            <p class="mt-1 text-sm text-gray-500">Select how the customer will pay for this transaction.</p>
-            
-            <div class="mt-4">
-              <label for="payment_method" class="block text-sm font-medium text-gray-700">Payment Method</label>
-              <select 
-                id="payment_method"
-                name="payment_method" 
-                required 
-                class="mt-1 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md p-2">
-                <option value="">Select payment method</option>
-                {% for key, value in payment_methods %}
-                  <option value="{{ key }}">{{ value }}</option>
-                {% endfor %}
-              </select>
-            </div>
-          </div>
+          {% include 'menu/components/select.html' with label="Payment Method" id="payment_method" name="payment_method" default_option="Select payment method" options=payment_methods%}
         </div>
 
-        <div class="mt-8 flex justify-end">
-          <button 
-            type="button" 
-            class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+        <div class="mt-8 flex justify-end space-x-3">
+          <button type="button" class="button-secondary">
             Cancel
           </button>
-          <button 
-            type="submit" 
-            :disabled="!items.length"
-            class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed">
+          <button type="submit" class="button-primary">
             Submit Transaction
           </button>
         </div>
+        
       </form>
+      
     </div>
   </div>
 </div>
