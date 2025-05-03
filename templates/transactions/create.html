@@ -21,6 +21,9 @@
 </script>
 
 <div class="max-w-2xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+  {% for transaction in transactions %}
+    <p>{{transaction}}</p>
+  {% endfor %}
   <div class="bg-white shadow overflow-hidden rounded-lg">
     <div class="px-4 py-5 sm:px-6">
       <h1 class="text-2xl font-semibold text-gray-900">Create Transaction</h1>
@@ -30,10 +33,14 @@
     <div class="px-4 py-5 sm:p-6">
       <!-- Error messages -->
       {% include 'menu/components/messages.html' %}
-
+      
+      
       <form method="post" x-data="transactionForm(menuItemsData, formData)">
         {% csrf_token %}
-
+        
+        <!-- Warning Message -->
+        {% include 'transactions/components/message/warning.html'%}
+        
         <div class="space-y-6">
           <!-- Date  -->
           {% include 'transactions/components/input.html' with label="Date" field="date" value=name type="datetime-local" %}
@@ -44,9 +51,6 @@
 
           <!-- Menu Items Selection -->
           {% include 'transactions/components/select-items.html' with options=menu_items%}
-          
-          <!-- Warning Message -->
-          {% include 'transactions/components/message/warning.html'%}
 
           <!-- Selected Items -->
           <div x-show="items.length > 0" class="my-2">

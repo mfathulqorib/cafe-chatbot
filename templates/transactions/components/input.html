@@ -10,7 +10,7 @@
             value="{{value|default:''}}"
             required={{is_required|default:True}}
             {% if field == "customer_phone" %}
-            @keypress="onlyAllowNumericInput"
+            @keypress="phoneNumberValidation"
             {% endif %}>
     </div>
 </div>

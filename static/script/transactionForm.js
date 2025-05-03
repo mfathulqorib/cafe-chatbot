@@ -32,7 +32,6 @@ function transactionForm(menuItems, formData = {}) {
       
       // Add an item to the transaction
       addItem() {
-        console.log(this.items)
         if (!this.selectedItemId) {
           this.warningMessage = "Select menu item!";
           this.showWarning = true;
@@ -76,11 +75,20 @@ function transactionForm(menuItems, formData = {}) {
         this.items.splice(index, 1);
       },
 
-      onlyAllowNumericInput(event) {
+      phoneNumberValidation(event) {
+        this.showWarning = false;
+
+        const el = document.getElementById("customer_phone")
+        const value = el.value
         const allowed = ['0','1','2','3','4','5','6','7','8','9','.'];
-        if (!allowed.includes(event.key)) {
+        if (!allowed.includes(event.key) | value.length > 12) {
             event.preventDefault();
         }
+        
+        if (value.length > 12) {
+          this.warningMessage = "Maximum 13 digits for phone number!";
+          this.showWarning = true;
+        } 
     }
     };
   }

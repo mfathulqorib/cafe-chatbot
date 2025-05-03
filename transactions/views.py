@@ -53,6 +53,8 @@ class CreateTransaction(View):
                 messages.warning(request, f"Menu item {menu_id} not found.")
             except Exception as e:
                 messages.error(request, f"Error processing item {index}: {e}")
+                return render(request, 'menu/create.html', context)
+            
             index += 1
 
         messages.success(request, "Transaction created successfully.")
