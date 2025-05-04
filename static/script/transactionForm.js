@@ -1,5 +1,6 @@
 // transaction-form.js
 function transactionForm(menuItems, formData = {}) {
+    const inputMenuItem = document.getElementById('menu-item')
     const items = []
     let index = 0;
 
@@ -35,6 +36,7 @@ function transactionForm(menuItems, formData = {}) {
         if (!this.selectedItemId) {
           this.warningMessage = "Select menu item!";
           this.showWarning = true;
+          inputMenuItem.focus()
           return;
         }
   
