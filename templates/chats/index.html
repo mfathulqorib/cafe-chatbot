@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+{% block content %}
+<body class="bg-gray-100 h-screen flex flex-col">
+    <div class="container mx-auto px-4 flex flex-col h-full max-w-2xl">
+        <!-- Header -->
+        <header class="py-6">
+            <h1 class="text-2xl md:text-3xl font-bold text-center text-gray-800">Cafe Assistant</h1>
+        </header>
+        
+        <!-- Chat Area -->
+        <div class="flex-1 bg-white rounded-lg shadow-md flex flex-col overflow-hidden">
+            <!-- Chat Messages -->
+            <div id="chat-messages" class="flex-1 overflow-y-auto p-4 space-y-4">
+                <!-- Bot welcome message -->
+                <div class="flex items-start">
+                    <div class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M2 10a8 8 0 1116 0 8 8 0 01-16 0zm8 1a1 1 0 100-2 1 1 0 000 2zm-.5-6a.5.5 0 00-.5.5v4a.5.5 0 001 0v-4a.5.5 0 00-.5-.5z" />
+                        </svg>
+                    </div>
+                    <div class="ml-2 bg-gray-100 rounded-lg py-2 px-4 max-w-[75%]">
+                        <p class="text-gray-800">Hello! How can I assist you today?</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Input Area -->
+            <div class="border-t border-gray-200 p-4">
+                <form id="chat-form" class="flex space-x-2">
+                    <input 
+                        type="text" 
+                        id="user-input" 
+                        class="flex-1 border border-gray-300 rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                        placeholder="Type your message..." 
+                        autocomplete="off"
+                    >
+                    <button 
+                        type="submit" 
+                        class="bg-blue-500 text-white rounded-full p-2 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                        </svg>
+                    </button>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <footer class="py-4 text-center text-sm text-gray-500">
+            <p>© 2025 Chatbot App</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const chatForm = document.getElementById('chat-form');
+            const userInput = document.getElementById('user-input');
+            const chatMessages = document.getElementById('chat-messages');
+            
+            // Bot responses
+            const botResponses = [
+                "That's interesting! Tell me more.",
+                "I understand. How can I help with that?",
+                "Thanks for sharing. Is there anything specific you'd like to know?",
+                "I'm processing your request. Give me a moment.",
+                "Could you provide more details about that?",
+                "I'm here to assist you with any questions."
+            ];
+            
+            // Function to add a new message to the chat
+            function addMessage(text, isUser) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = "flex items-start " + (isUser ? "justify-end" : "");
+                
+                let messageContent = '';
+                
+                if (isUser) {
+                    messageContent = `
+                        <div class="mr-2 bg-blue-500 rounded-lg py-2 px-4 max-w-[75%]">
+                            <p class="text-white">${text}</p>
+                        </div>
+                        <div class="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-gray-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                    `;
+                } else {
+                    messageContent = `
+                        <div class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M2 10a8 8 0 1116 0 8 8 0 01-16 0zm8 1a1 1 0 100-2 1 1 0 000 2zm-.5-6a.5.5 0 00-.5.5v4a.5.5 0 001 0v-4a.5.5 0 00-.5-.5z" />
+                            </svg>
+                        </div>
+                        <div class="ml-2 bg-gray-100 rounded-lg py-2 px-4 max-w-[75%]">
+                            <p class="text-gray-800">${text}</p>
+                        </div>
+                    `;
+                }
+                
+                messageDiv.innerHTML = messageContent;
+                chatMessages.appendChild(messageDiv);
+                
+                // Scroll to bottom of chat
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+            
+            // Form submission handler
+            chatForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const message = userInput.value.trim();
+                
+                if (message) {
+                    // Add user message
+                    addMessage(message, true);
+                    userInput.value = '';
+                    
+                    // Simulate bot typing delay
+                    setTimeout(() => {
+                        // Get random response
+                        const randomIndex = Math.floor(Math.random() * botResponses.length);
+                        const botReply = botResponses[randomIndex];
+                        
+                        // Add bot response
+                        addMessage(botReply, false);
+                    }, 1000);
+                }
+            });
+            
+            // Focus input on page load
+            userInput.focus();
+        });
+    </script>
+</body>
+{% endblock %}
