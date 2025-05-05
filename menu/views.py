@@ -10,7 +10,7 @@ class CreateMenu(View):
     context = {"categories": categories}
 
     def get(self, request):
-        return render(request, 'menu/create.html', self.context)
+        return render(request, 'menu/create/page.html', self.context)
 
     def post(self, request):
         data = request.POST.dict()
@@ -31,13 +31,13 @@ class CreateMenu(View):
         
         if MenuItem.objects.filter(name=menu_data['name']).exists() :
             messages.error(request, "Menu is already registered")
-            return render(request, 'menu/create.html', dict(self.context, **menu_data))
+            return render(request, 'menu/create/page.html', dict(self.context, **menu_data))
 
         try:
             MenuItem.objects.create(**menu_data)
         except IntegrityError:
             messages.error(request, "Something wrong, please cek again your input")
-            return render(request, 'menu/create.html', dict(self.context, **menu_data))
+            return render(request, 'menu/create/page.html', dict(self.context, **menu_data))
         
         messages.success(request, "Menu successfully created")
-        return render(request, 'menu/create.html', self.context)
+        return render(request, 'menu/create/page.html', self.context)

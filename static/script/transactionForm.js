@@ -1,96 +1,125 @@
 // transaction-form.js
 function transactionForm(menuItems, formData = {}) {
-    const inputMenuItem = document.getElementById('menu-item')
-    const items = []
+    // Constants
+    const PHONE_NUMBER_MAX_LENGTH = 12;
+    const ALLOWED_PHONE_CHARS = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.'];
+    
+    // DOM Elements
+    const inputMenuItem = document.getElementById('menu-item');
+    
+    // Initialize items from form data
+    const items = [];
     let index = 0;
-
     while (`id_${index}` in formData) {
-    items.push({
-        id: formData[`id_${index}`],
-        name: formData[`name_${index}`],
-        price: parseInt(formData[`price_${index}`], 10),
-        qty: parseInt(formData[`quantity_${index}`], 10)
-    });
-    index++;
+        items.push({
+            id: formData[`id_${index}`],
+            name: formData[`name_${index}`],
+            price: parseInt(formData[`price_${index}`], 10),
+            qty: parseInt(formData[`quantity_${index}`], 10)
+        });
+        index++;
     }
       
     return {
-      selectedItemId: '',
-      selectedQty: 1,
-      items: items,
-      showWarning: false,
-      warningMessage: '',
-      
-      // Format currency in Indonesian Rupiah format
-      formatCurrency(amount) {
-        return 'Rp ' + new Intl.NumberFormat('id-ID').format(amount);
-      },
-      
-      // Calculate total amount from all items
-      calculateTotal() {
-        return this.items.reduce((sum, item) => sum + (item.price * item.qty), 0);
-      },
-      
-      // Add an item to the transaction
-      addItem() {
-        if (!this.selectedItemId) {
-          this.warningMessage = "Select menu item!";
-          this.showWarning = true;
-          inputMenuItem.focus()
-          return;
-        }
-  
-        this.showWarning = false;
-  
-        const existing = this.items.find(i => i.id === this.selectedItemId);
-
-        if (existing) {
-          existing.qty += parseInt(this.selectedQty);
-        } else {
-          const selectedItem = menuItems[this.selectedItemId];
-          this.items.push({
-            id: this.selectedItemId,
-            name: selectedItem.name,
-            price: selectedItem.price,
-            qty: parseInt(this.selectedQty),
-          });
-        }
-  
-        this.selectedItemId = '';
-        this.selectedQty = 1;
-      },
-      
-      // Increase quantity of an item
-      incrementQty(index) {
-        this.items[index].qty += 1;
-      },
-      
-      // Decrease quantity of an item
-      decrementQty(index) {
-        if (this.items[index].qty > 1) {
-          this.items[index].qty -= 1;
-        }
-      },
-      
-      // Remove an item from the transaction
-      removeItem(index) {
-        this.items.splice(index, 1);
-      },
-
-      phoneNumberValidation(event) {
-        this.showWarning = false;
-
-        const el = document.getElementById("customer_phone")
-        const value = el.value
-        const allowed = ['0','1','2','3','4','5','6','7','8','9','.'];
-        if (!allowed.includes(event.key) | value.length > 12) {
-            event.preventDefault();
-        }
+        // State
+        selectedItemId: '',
+        selectedQty: 1,
+        items: items,
+        showWarning: false,
+        warningMessage: '',
         
-        if (value.length > 12) {
-          this.warningMessage = "Maximum 13 digits for phone number!";
-          this.showWarning = true;
-        } 
-    }
+        // Utility Methods
+        formatCurrency(amount) {
+            if (typeof amount !== 'number') {
+                console.warn('formatCurrency received non-number input:', amount);
+                return 'Rp 0';
+            }
+            return 'Rp ' + new Intl.NumberFormat('id-ID').format(amount);
+        },
+        
+        calculateTotal() {
+            return this.items.reduce((sum, item) => {
+                if (!item.price || !item.qty) {
+                    console.warn('Invalid item data:', item);
+                    return sum;
+                }
+                return sum + (item.price * item.qty);
+            }, 0);
+        },
+        
+        // Item Management Methods
+        addItem() {
+            if (!this.selectedItemId) {
+                this.setWarning("Select menu item!");
+                inputMenuItem.focus();
+                return;
+            }
+  
+            this.showWarning = false;
+            const existingItem = this.items.find(i => i.id === this.selectedItemId);
+
+            if (existingItem) {
+                existingItem.qty += parseInt(this.selectedQty);
+            } else {
+                const selectedItem = menuItems[this.selectedItemId];
+                if (!selectedItem) {
+                    this.setWarning("Selected item not found!");
+                    return;
+                }
+                
+                this.items.push({
+                    id: this.selectedItemId,
+                    name: selectedItem.name,
+                    price: selectedItem.price,
+                    qty: parseInt(this.selectedQty),
+                });
+            }
+  
+            this.resetSelection();
+        },
+        
+        incrementQty(index) {
+            if (this.items[index]) {
+                this.items[index].qty += 1;
+            }
+        },
+        
+        decrementQty(index) {
+            if (this.items[index] && this.items[index].qty > 1) {
+                this.items[index].qty -= 1;
+            }
+        },
+        
+        removeItem(index) {
+            if (this.items[index]) {
+                this.items.splice(index, 1);
+            }
+        },
+
+        // Helper Methods
+        setWarning(message) {
+            this.warningMessage = message;
+            this.showWarning = true;
+        },
+
+        resetSelection() {
+            this.selectedItemId = '';
+            this.selectedQty = 1;
+        },
+
+        // Validation Methods
+        phoneNumberValidation(event) {
+            this.showWarning = false;
+            const el = document.getElementById("customer_phone");
+            const value = el.value;
+            
+            if (!ALLOWED_PHONE_CHARS.includes(event.key) || value.length > PHONE_NUMBER_MAX_LENGTH) {
+                event.preventDefault();
+            }
+            
+            if (value.length > PHONE_NUMBER_MAX_LENGTH) {
+                this.setWarning("Maximum 13 digits for phone number!");
+            }
+        }
     };
-  }
+}

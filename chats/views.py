@@ -3,7 +3,7 @@ from django.shortcuts import render
 
 
 class ChatView(View):
-    template_name = "chats/index.html"
+    template_name = "chats/page.html"
 
     def get(self, request):
         return render(request, self.template_name)
