@@ -65,6 +65,7 @@ langchain-experimental==0.3.4
 langchain-openai==0.3.14
 langchain-text-splitters==0.3.8
 langsmith==0.3.32
+Markdown==3.8
 markdown-it-py==3.0.0
 marshmallow==3.26.1
 mdurl==0.1.2

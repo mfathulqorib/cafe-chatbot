@@ -1,5 +1,6 @@
 import os
 from openai import OpenAI
+from rich import print
 
 OPENAI_API_KEY = os.environ["OPENAI_API_KEY"]
 client = OpenAI(api_key=OPENAI_API_KEY)
@@ -26,3 +27,11 @@ class PromptManager:
         data = parsed.model_dump()
 
         return data
+    
+    def generate_stream(self):
+        response = client.chat.completions.create(model=self.model, messages=self.messages, stream=True)
+        for chunk in response:
+            if chunk.choices[0].finish_reason == "stop":
+                yield "stream_end"
+            else:  
+                yield chunk.choices[0].delta.content

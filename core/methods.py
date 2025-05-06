@@ -12,12 +12,15 @@ def send_notification(notification_type, content):
         },
     })
 
-def send_chat_message(message):
+def send_chat_message(message, stream_status="on_progress"):
     channel = get_channel_layer()
     async_to_sync(channel.group_send)(
         "chat", 
         {
             'type': 'send_message',
-            'message':message
+            'message':{
+                'content': message,
+                'stream_status': stream_status
+            },
         }
     )

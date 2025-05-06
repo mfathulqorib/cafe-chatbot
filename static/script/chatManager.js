@@ -4,7 +4,10 @@ class ChatManager {
         this.userInput = document.getElementById('user-input');
         this.chatMessages = document.getElementById('chat-messages');
         this.submitBtn = document.getElementById('submit-btn');
+
+        this.latestId = null
         this.ws = null;
+        
         this.typingEl = 
         `<div class="flex space-x-1">
             <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0ms"></div>
@@ -19,6 +22,8 @@ class ChatManager {
         this.connectWebSocket();
         this.setupEventListeners();
         this.userInput.focus();
+        document.getElementById('content').innerHTML =
+            marked.parse('### Marked in browser\n\nRendered by **marked**.');
     }
 
     connectWebSocket() {
@@ -40,14 +45,28 @@ class ChatManager {
             };
 
             this.ws.onmessage = (event) => {
-                try {
-                    const responseMessage = JSON.parse(event.data).message;
-                    const typingIndicatorEl = document.getElementById('typing-indicator');
+                const typingIndicatorEl = document.getElementById('typing-indicator');
 
+                if(typingIndicatorEl) {
                     typingIndicatorEl.remove();
-                    this.addMessage(responseMessage, false);
+                }
+                
+                try {
+                    const data = JSON.parse(event.data).message;
+                    const responseMessage = data.content;
+                    
+                    if(data.stream_status == "start_stream") {
+                        this.addMessage(responseMessage, false);
+                    } else if(data.stream_status == "on_progress") {
+                        this.appendMessage(responseMessage);
+                    } else if(data.stream_status == "stream_end") {
+                        this.parseMessage();
+                    }
+
+                    
                 } catch (error) {
                     console.error("Error parsing message:", error);
+                    this.addMessage("Sorry, I'm having trouble connecting. Please try again later.", false);
                 }
             };
         } catch (error) {
@@ -73,9 +92,10 @@ class ChatManager {
     }
 
     sendMessage(message) {
+        this.addMessage(message);
+
         if (this.ws && this.ws.readyState === WebSocket.OPEN) {
             this.ws.send(JSON.stringify({ message }));
-            this.addMessage(message);
             this.addMessage(this.typingEl, 'typing-indicator');
         } else {
             console.error("WebSocket is not connected");
@@ -84,39 +104,57 @@ class ChatManager {
     }
 
     addMessage(content, role = "user") {
+        this.latestId = this.generateId();
+
         const messageDiv = document.createElement('div');
         messageDiv.className = `flex ${role == 'typing-indicator' ? 'items-center' : 'items-start'} ${role == 'user' ? 'justify-end' : ''}`;
         messageDiv.id = role == 'typing-indicator' ? 'typing-indicator' : '';
         
         const userIcon = `
-            <div class="w-8 h-8 rounded-full ${role == 'user' ? 'bg-gray-300' : 'bg-blue-500'} flex items-center justify-center ${role == 'user' ? 'text-gray-600' : 'text-white'}">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                    ${role == 'user' ? 
-                        '<path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />' :
-                        '<path d="M2 10a8 8 0 1116 0 8 8 0 01-16 0zm8 1a1 1 0 100-2 1 1 0 000 2zm-.5-6a.5.5 0 00-.5.5v4a.5.5 0 001 0v-4a.5.5 0 00-.5-.5z" />'
-                    }
-                </svg>
+        <div class="w-8 h-8 rounded-full ${role == 'user' ? 'bg-gray-300' : 'bg-blue-500'} flex items-center justify-center ${role == 'user' ? 'text-gray-600' : 'text-white'}">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+        ${role == 'user' ? 
+            '<path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />' :
+            '<path d="M2 10a8 8 0 1116 0 8 8 0 01-16 0zm8 1a1 1 0 100-2 1 1 0 000 2zm-.5-6a.5.5 0 00-.5.5v4a.5.5 0 001 0v-4a.5.5 0 00-.5-.5z" />'
+            }
+            </svg>
             </div>
-        `;
-
+            `;
+            
         const messageContent = `
-            <div class="${role == 'user' ? 'mr-2 bg-blue-500' : 'ml-2 bg-gray-100'} rounded-lg py-2 px-4 max-w-[75%]">
-                <p class="${role == 'user' ? 'text-white' : 'text-gray-800'}">${content}</p>
-            </div>
+        <div class="${role == 'user' ? 'mr-2 bg-blue-500' : 'ml-2 bg-gray-100'} rounded-lg py-2 px-4 max-w-[75%]">
+        <p id="${this.latestId}" class="${role == 'user' ? 'text-white' : 'text-gray-800'}">${role == 'user' ? content : marked.parse(content)}</p>
+        </div>
         `;
-
+        
         messageDiv.innerHTML = role == 'user' ? 
-            `${messageContent}${userIcon}` : 
-            `${userIcon}${messageContent}`;
-
+        `${messageContent}${userIcon}` : 
+        `${userIcon}${messageContent}`;
+        
         this.chatMessages.appendChild(messageDiv);
         this.chatMessages.scrollTop = this.chatMessages.scrollHeight;
+    }
+
+    appendMessage(content) {
+        const messageEl = document.getElementById(this.latestId);
+        messageEl.innerText += content;
+
+        this.chatMessages.scrollTop = this.chatMessages.scrollHeight;
+    }
+
+    parseMessage() {
+        const messageEl = document.getElementById(this.latestId);
+        messageEl.innerHTML = marked.parse(messageEl.innerHTML);
     }
 
     cleanup() {
         if (this.ws) {
             this.ws.close();
         }
+    }
+
+    generateId() {
+        return crypto.randomUUID();
     }
 }
 
