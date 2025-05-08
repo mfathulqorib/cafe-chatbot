@@ -10,7 +10,7 @@
             <p class="mt-1 text-sm text-gray-500">Add a new menu item to your collection.</p>
         </div>
         <div class="px-4 py-5 sm:p-6">
-            {% include 'menu/components/messages.html' %}
+            {% include 'shared/components/messages.html' %}
 
             <form method="post">
                 {% csrf_token %}
@@ -23,10 +23,10 @@
                     {% include 'menu/components/input.html' with label="Price (Rp)" field="price" placeholder="Rp 0" value=price%}
                     
                     <!-- Description Field -->
-                    {% include 'menu/components/textarea.html' with label="Description" field="description" placeholder="Describe your menu item" value=description description_input="Brief description of the menu item."%}
+                    {% include 'shared/components/textarea.html' with label="Description" field="description" placeholder="Describe your menu item" value=description description_input="Brief description of the menu item."%}
                     
                     <!-- Category Field -->
-                    {% include 'menu/components/select.html' with label="Category" id="category" name="category" default_option="Select menu category" options=categories input_value=category%}
+                    {% include 'shared/components/select.html' with label="Category" id="category" name="category" default_option="Select menu category" options=categories input_value=category%}
                 </div>
                 <div class="pt-5">
                     <div class="flex justify-end space-x-3">

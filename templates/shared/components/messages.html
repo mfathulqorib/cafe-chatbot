@@ -3,7 +3,7 @@
     <div class="{% if message.tags == 'error' %} bg-red-50 border border-red-200 text-red-700{% else %}bg-green-50 border border-green-200 text-green-700{% endif %} mb-2 p-4 rounded text-sm flex">
         {% if message.tags == 'error' %}
         <div class="flex-shrink-0">
-            {% include 'icons/alert.html' %}
+            {% include 'shared/icons/alert.html' %}
         </div>
         {% endif %}
         <div class="{% if message.tags == 'error' %} ml-3 {% endif %}">

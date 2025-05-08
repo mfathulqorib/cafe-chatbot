@@ -29,14 +29,14 @@
     
     <div class="px-4 py-5 sm:p-6">
       <!-- Error messages -->
-      {% include 'menu/components/messages.html' %}
+      {% include 'shared/components/messages.html' %}
       
       
       <form method="post" x-data="transactionForm(menuItemsData, formData)">
         {% csrf_token %}
         
         <!-- Warning Message -->
-        {% include 'transactions/components/message/warning.html'%}
+        {% include 'transactions/components/warning-message.html'%}
         
         <div class="space-y-6">
           <!-- Date  -->
@@ -59,7 +59,7 @@
           {% include 'transactions/components/empty-state.html'%}
 
           <!-- Payment Method -->
-          {% include 'menu/components/select.html' with label="Payment Method" id="payment_method" name="payment_method" default_option="Select payment method" options=payment_methods input_value=payment_method%}
+          {% include 'shared/components/select.html' with label="Payment Method" id="payment_method" name="payment_method" default_option="Select payment method" options=payment_methods input_value=payment_method%}
         </div>
 
         <div class="mt-8 flex justify-end space-x-3">

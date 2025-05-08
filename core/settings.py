@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'transactions',
     'menu',
     'chats',
+    'my_auth',
 ]
 
 MIDDLEWARE = [

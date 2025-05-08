@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="py-8 px-4 max-w-2xl mx-auto sm:px-6 lg:px-8 flex justify-center">
+        <div class="bg-white shadow w-full rounded-lg px-4 py-5 sm:px-6">
+
+            <!-- Page title -->
+            <h1 class="text-2xl font-bold text-gray-800 mb-4">Login to Your Account</h1>
+
+            <!-- Separator -->
+            <div class="h-px bg-gray-200 my-6"></div>
+
+            <!-- Login content -->
+            <div>
+                <p class="text-gray-600 mb-5">Enter your credentials to access your account and all your saved
+                    files.</p>
+
+                <!-- Error messages -->
+                {% include 'shared/components/messages.html' %}
+
+                <!-- Login form -->
+                <form method="post" action="">
+                    {% csrf_token %}
+
+                    <div class="space-y-6">
+                        {% include 'my_auth/components/input.html' with field="username" label="Username" placeholder="Enter your username" %}
+
+                        {% include 'my_auth/components/input.html' with field="password" label="Password" placeholder="Enter your password" %}
+                        
+                        <div class="flex justify-between items-center mb-5">
+                            <div class="flex items-center">
+                                <input type="checkbox" id="remember" name="remember"
+                                class="h-4 w-4 text-blue-600 border-gray-300 rounded">
+                                <label for="remember" class="ml-2">Remember me</label>
+                            </div>
+                        </div>
+                    </div>
+                        
+                    <button
+                            type="submit"
+                            class="button-primary w-full"
+                    >
+                        Login
+                    </button>
+                </form>
+
+                <div class="text-center mt-5 text-sm text-gray-600">
+                    Don't have an account? <a href="{% url 'register' %}" class="text-blue-600 hover:underline">Register
+                    here</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
