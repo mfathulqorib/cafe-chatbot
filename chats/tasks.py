@@ -1,7 +1,8 @@
-from core.ai.prompt_manager import PromptManager
 from huey.contrib.djhuey import task
-from core.methods import send_chat_message
 from rich import print
+
+from core.ai.prompt_manager import PromptManager
+from core.methods import send_chat_message
 
 SYSTEM_PROMPT_RAG = """
 You are an advanced AI assistant specialized in restaurant, cafe, and food-related information. Provide helpful, accurate, and well-formatted responses to user queries about dining establishments, menus, nutrition facts, and related topics.
@@ -34,20 +35,15 @@ You are an advanced AI assistant specialized in restaurant, cafe, and food-relat
 Remember: Your goal is to provide helpful, accurate responses about restaurants, cafes, food items, and nutrition that are easy to read and understand.
 """
 
+
 @task()
 def process_chat(message):
     print(f"message: {message}")
     print("processing respons...")
 
-    messages = [{
-        "role": "system",
-        "content": SYSTEM_PROMPT_RAG
-    }]
-    
-    messages.append({
-        "role": "user",
-        "content": message
-    })
+    messages = [{"role": "system", "content": SYSTEM_PROMPT_RAG}]
+
+    messages.append({"role": "user", "content": message})
 
     pm = PromptManager()
     pm.set_messages(messages)
@@ -62,4 +58,3 @@ def process_chat(message):
                 send_chat_message(assistant_message, "stream_end")
             else:
                 send_chat_message(assistant_message, "on_progress")
-

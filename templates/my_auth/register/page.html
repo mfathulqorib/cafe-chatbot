@@ -20,9 +20,9 @@
                     {% csrf_token %}
 
                     <div class="space-y-6">
-                        {% include 'my_auth/components/input.html' with field="username" label="Username" placeholder="Choose a username" value=username required=True %}
+                        {% include 'my_auth/components/input.html' with field="username" label="Username" placeholder="Choose a username" value=username %}
                         
-                        {% include 'my_auth/components/input.html' with field="email" label="Email" id="email" type="email" name="email" placeholder="Enter your email address" value=email required=True %}
+                        {% include 'my_auth/components/input.html' with field="email" label="Email" id="email" type="email" name="email" placeholder="Enter your email address" value=email %}
                         
                         {% include 'my_auth/components/input.html' with field="password" label="Password" id="password" type="password" name="password" placeholder="Enter your password" %}
                         
@@ -36,7 +36,7 @@
 
                     <button
                             type="submit"
-                            class="button-primary"
+                            class="button-primary w-full"
                     >
                         Register
                     </button>

@@ -15,9 +15,11 @@
 </head>
 <body class="bg-gray-100 overscroll-none">
     <div class="flex h-screen">
+        {% if user.is_authenticated %}
         <div class="w-64 flex-shrink-0">
             {% include "shared/components/navbar.html" %}
         </div>
+        {% endif %}
         <main class="flex-grow bg-gray-100 overflow-y-auto">
             {% block content %}{% endblock %}
         </main>
