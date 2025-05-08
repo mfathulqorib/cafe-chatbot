@@ -26,8 +26,7 @@ class CreateMenu(View):
 
         if not menu_data['name'] or not menu_data['price'] or not menu_data['category']:
             messages.error(request, "Please fill out all required fields.")
-            print(dict(self.context, **menu_data))
-            return render(request, 'menu/create.html', dict(self.context, **menu_data))
+            return render(request, 'menu/create/page.html', dict(self.context, **menu_data))
         
         if MenuItem.objects.filter(name=menu_data['name']).exists() :
             messages.error(request, "Menu is already registered")

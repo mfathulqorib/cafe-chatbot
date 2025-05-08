@@ -21,12 +21,16 @@ class CreateTransaction(View):
     def post(self, request):
         data = request.POST.dict()
         context = self.context
-        context["form_data"] = data
 
         if not data.get('customer_name') or not data.get('date') or not data.get('payment_method'):
             messages.error(request, "Please fill out all required fields.")
-            return render(request, 'transactions/create/page.html', context)
+            return render(request, 'transactions/create/page.html', dict(context, **data))
         
+        if not data.get('id_0'):
+            messages.error(request, "Please add at least one item to the transaction.")
+            print(context)
+            return render(request, 'transactions/create/page.html', dict(context, **data))
+            
         # Create the transaction
         transaction = Transaction.objects.create(
             actor=request.user if request.user.is_authenticated else None,
@@ -38,6 +42,7 @@ class CreateTransaction(View):
 
         # Extract dynamic items from form
         index = 0
+        print(data)
         while f"id_{index}" in data:
             print(f"processing index: {index}")
             try:
