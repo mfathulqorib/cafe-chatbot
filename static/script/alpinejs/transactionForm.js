@@ -74,6 +74,7 @@ function transactionForm(menuItems, formData = {}) {
                     qty: parseInt(this.selectedQty),
                 });
             }
+            document.getElementById('selected-items').classList.remove('hidden');
   
             this.resetSelection();
         },
@@ -98,6 +99,8 @@ function transactionForm(menuItems, formData = {}) {
 
         // Helper Methods
         setWarning(message) {
+            // Show warning message by removing hidden class
+            document.getElementById('warning-message').classList.remove('hidden');
             this.warningMessage = message;
             this.showWarning = true;
         },

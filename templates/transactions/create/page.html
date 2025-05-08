@@ -3,7 +3,7 @@
 
 {% block content %}
 {{ form_data|json_script:"form-data" }}
-<script src="{% static 'script/transactionForm.js' %}"></script>
+<script src="{% static 'script/alpinejs/transactionForm.js' %}"></script>
 <script>
     const formData = JSON.parse(document.getElementById('form-data').textContent) || {};
 
@@ -53,7 +53,7 @@
           {% include 'transactions/components/select-items.html' with options=menu_items%}
 
           <!-- Selected Items -->
-          <div x-show="items.length > 0" class="my-2">
+          <div id="selected-items" x-show="items.length > 0" class="my-2 hidden">
             <h3 class="text-lg font-medium text-gray-900 mb-3">Selected Items</h3>
             {% include 'transactions/components/table.html' with items=items%}
           </div>

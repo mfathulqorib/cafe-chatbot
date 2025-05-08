@@ -5,19 +5,9 @@
 {% block content %}
 <script src="{% static 'script/chatManager.js' %}"></script>
 
-<body class="min-h-screen bg-gray-50">
-    <div class="container mx-auto px-4 h-screen flex flex-col max-w-2xl">
+<div class="min-h-max h-screen bg-gray-50">
+    <div class="container mx-auto px-4 h-full flex flex-col max-w-2xl pt-4">
         <!-- Header -->
-        <div class="flex flex-col items-center py-6">
-            <div class="flex items-center space-x-2">
-              <!-- Optional: You can use Heroicons or an SVG for the bot/coffee icon -->
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 21h8m-4-4v4m-6-4a4 4 0 118 0m-8 0h8a4 4 0 004-4V9a4 4 0 00-4-4H6a4 4 0 00-4 4v4a4 4 0 004 4z" />
-              </svg>
-              <h1 class="text-2xl font-bold text-gray-800">BrewBot</h1>
-            </div>
-            <p class="text-sm text-gray-500">Your AI Café Assistant</p>
-        </div>
         <div id="content">
 
         </div>
@@ -55,6 +45,6 @@
             </div>
         </div>
     </div>
-</body>
+</div>
 
 {% endblock %}

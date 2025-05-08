@@ -5,15 +5,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Transport Management System for optimizing delivery and logistics.">
-    <meta name="keywords" content="logistics, delivery, management, warehouse, TMS">
-    <meta name="author" content="Your Company Name">
+    <meta name="description" content="KitchenIntel - AI-powered cafe management system for streamlining operations and enhancing customer experience.">
+    <meta name="keywords" content="cafe management, AI chatbot, sales insights, menu management, cafe operations">
+    <meta name="author" content="KitchenIntel">
     <link rel="stylesheet" href="{% static 'output.css' %}">
-    <title>{% block title %}Cafeku{% endblock %}</title>
+    <title>{% block title %}KitchenIntel{% endblock %}</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.12.0/cdn.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body class="bg-gray-100 overscroll-none">
-    {% block content %}{% endblock %}
+    <div class="flex h-screen">
+        <div class="w-64 flex-shrink-0">
+            {% include "shared/components/navbar.html" %}
+        </div>
+        <main class="flex-grow bg-gray-100 overflow-y-auto">
+            {% block content %}{% endblock %}
+        </main>
+    </div>
 </body>
 </html>
