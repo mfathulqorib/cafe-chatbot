@@ -34,7 +34,7 @@ INSTALLED_APPS = [
     "huey.contrib.djhuey",
     "channels",
     "django_filters",
-    "transactions",
+    "orders",
     "menu",
     "chats",
     "my_auth",

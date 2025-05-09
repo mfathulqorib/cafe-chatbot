@@ -1,5 +1,5 @@
 // transaction-form.js
-function transactionForm(menuItems, formData = {}) {
+function orderForm(menuItems, formData = {}) {
     // Constants
     const PHONE_NUMBER_MAX_LENGTH = 12;
     const ALLOWED_PHONE_CHARS = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.'];

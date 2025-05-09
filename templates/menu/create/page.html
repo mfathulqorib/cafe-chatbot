@@ -21,7 +21,7 @@
                     {% include 'shared/components/textarea.html' with label="Description" field="description" placeholder="Describe your menu item" value=description description_input="Brief description of the menu item."%}
                     
                     <!-- Category Field -->
-                    {% include 'shared/components/select.html' with label="Category" id="category" name="category" default_option="Select menu category" options=categories input_value=category%}
+                    {% include 'shared/components/select.html' with label="Category" id="category" name="category" default_option="Select menu category" options=categories input_value=category is_required=True%}
                 </div>
                 <div>
                     <div class="flex justify-end space-x-3">

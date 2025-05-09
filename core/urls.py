@@ -5,7 +5,7 @@ from .consumer import ChatConsumer, NotificationConsumer
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", include("transactions.urls")),
+    path("", include("orders.urls")),
     path("", include("menu.urls")),
     path("", include("chats.urls")),
     path("", include("my_auth.urls")),

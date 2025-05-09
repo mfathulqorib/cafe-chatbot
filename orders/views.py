@@ -7,31 +7,29 @@ from django.views.generic import View
 from rich import print
 
 from menu.models import MenuItem
-from transactions.models import Transaction, TransactionItem
-
-from .models import Transaction
+from orders.models import Order, OrderItem
 
 
-class ListTransaction(LoginRequiredMixin, View):
+class ListOrder(LoginRequiredMixin, View):
     login_url = "/login/"
 
     def get(self, request):
-        transactions = Transaction.objects.all()
-        return render(request, "transactions/page.html", {"transactions": transactions})
+        orders = Order.objects.all()
+        return render(request, "orders/page.html", {"orders": orders})
 
 
-class CreateTransaction(LoginRequiredMixin, View):
+class CreateOrder(LoginRequiredMixin, View):
     login_url = "/login/"
     context = {}
 
     def get(self, request):
-        payment_methods = Transaction.PaymentMethod.choices
+        payment_methods = Order.PaymentMethod.choices
         menu_items = MenuItem.objects.all()
 
         self.context["menu_items"] = menu_items
         self.context["payment_methods"] = payment_methods
 
-        return render(request, "transactions/create/page.html", self.context)
+        return render(request, "orders/create/page.html", self.context)
 
     def post(self, request):
         data = request.POST.dict()
@@ -43,18 +41,14 @@ class CreateTransaction(LoginRequiredMixin, View):
             or not data.get("payment_method")
         ):
             messages.error(request, "Please fill out all required fields.")
-            return render(
-                request, "transactions/create/page.html", dict(context, **data)
-            )
+            return render(request, "orders/create/page.html", dict(context, **data))
 
         if not data.get("id_0"):
-            messages.error(request, "Please add at least one item to the transaction.")
-            return render(
-                request, "transactions/create/page.html", dict(context, **data)
-            )
+            messages.error(request, "Please add at least one item to the order list.")
+            return render(request, "orders/create/page.html", dict(context, **data))
 
-        # Create the transaction
-        transaction = Transaction.objects.create(
+        # Create the order
+        order = Order.objects.create(
             actor=request.user if request.user.is_authenticated else None,
             date=data.get("date"),
             customer_name=data.get("customer_name"),
@@ -72,8 +66,8 @@ class CreateTransaction(LoginRequiredMixin, View):
 
                 menu_item = MenuItem.objects.get(id=menu_id)
 
-                TransactionItem.objects.create(
-                    transaction=transaction,
+                OrderItem.objects.create(
+                    order=order,
                     menu_item=menu_item,
                     quantity=quantity,
                     total_amount=price * quantity,
@@ -82,11 +76,12 @@ class CreateTransaction(LoginRequiredMixin, View):
                 messages.warning(request, f"Menu item {menu_id} not found.")
             except Exception as e:
                 messages.error(request, f"Error processing item {index}: {e}")
-                return render(request, "menu/create/page.html", context)
+                order.delete()
+                return render(request, "orders/create/page.html", context)
 
             index += 1
 
-        messages.success(request, "Transaction created successfully.")
+        messages.success(request, "Order created successfully.")
 
         context["form_data"] = {}
-        return render(request, "transactions/create/page.html", context)
+        return render(request, "orders/create/page.html", context)

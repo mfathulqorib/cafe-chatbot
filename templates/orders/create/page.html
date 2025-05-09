@@ -3,7 +3,7 @@
 
 {% block content %}
 {{ form_data|json_script:"form-data" }}
-<script src="{% static 'script/alpinejs/transactionForm.js' %}"></script>
+<script src="{% static 'script/alpinejs/orderForm.js' %}"></script>
 <script>
     const formData = JSON.parse(document.getElementById('form-data').textContent) || {};
 
@@ -23,8 +23,8 @@
 <div class="max-w-2xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
   <div class="bg-white shadow overflow-hidden rounded-lg">
     <div class="px-4 py-5 sm:px-6">
-      <h1 class="text-2xl font-semibold text-gray-900">Create Transaction</h1>
-      <p class="mt-1 text-sm text-gray-500">Add items to your transaction and complete the payment.</p>
+      <h1 class="text-2xl font-semibold text-gray-900">Create Order</h1>
+      <p class="mt-1 text-sm text-gray-500">Add items to your order and complete the payment.</p>
     </div>
     
     <div class="px-4 py-5 sm:p-6">
@@ -32,34 +32,34 @@
       {% include 'shared/components/messages.html' %}
       
       
-      <form method="post" x-data="transactionForm(menuItemsData, formData)">
+      <form method="post" x-data="orderForm(menuItemsData, formData)">
         {% csrf_token %}
         
         <!-- Warning Message -->
-        {% include 'transactions/components/warning-message.html'%}
+        {% include 'orders/components/warning-message.html'%}
         
         <div class="space-y-6">
           <!-- Date  -->
-          {% include 'transactions/components/input.html' with label="Date" field="date" value=date type="datetime-local" %}
+          {% include 'orders/components/input.html' with label="Date" field="date" value=date type="datetime-local" is_required=True %}
 
           <!-- Customer Name & Phone  -->
-          {% include 'transactions/components/input.html' with label="Customer Name" field="customer_name" value=customer_name placeholder="Input customer name" %}
-          {% include 'transactions/components/input.html' with label="Customer phone" field="customer_phone" value=customer_phone placeholder="Input customer phone number" %}
+          {% include 'orders/components/input.html' with label="Customer Name" field="customer_name" value=customer_name placeholder="Input customer name" is_required=True %}
+          {% include 'orders/components/input.html' with label="Customer phone (optional)" field="customer_phone" value=customer_phone placeholder="Input customer phone number" %}
 
           <!-- Menu Items Selection -->
-          {% include 'transactions/components/select-items.html' with options=menu_items%}
+          {% include 'orders/components/select-items.html' with options=menu_items%}
 
           <!-- Selected Items -->
           <div id="selected-items" x-show="items.length > 0" class="my-2 hidden">
             <h3 class="text-lg font-medium text-gray-900 mb-3">Selected Items</h3>
-            {% include 'transactions/components/table.html' with items=items%}
+            {% include 'orders/components/table.html' with items=items%}
           </div>
         
           <!-- Empty State -->
-          {% include 'transactions/components/empty-state.html'%}
+          {% include 'orders/components/empty-state.html'%}
 
           <!-- Payment Method -->
-          {% include 'shared/components/select.html' with label="Payment Method" id="payment_method" name="payment_method" default_option="Select payment method" options=payment_methods input_value=payment_method%}
+          {% include 'shared/components/select.html' with label="Payment Method" id="payment_method" name="payment_method" default_option="Select payment method" options=payment_methods input_value=payment_method is_required=True %}
         </div>
 
         <div class="mt-8 flex justify-end space-x-3">
@@ -67,7 +67,7 @@
             Cancel
           </button>
           <button type="submit" class="button-primary">
-            Submit Transaction
+            Submit Order
           </button>
         </div>
         
