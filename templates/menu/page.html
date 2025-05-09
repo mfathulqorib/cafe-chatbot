@@ -37,7 +37,7 @@
     </svg>
     </a>
 </div>
-<div class="p-2 bg-gray-50 rounded-lg mt-4">
+<div class="px-3 py-2 bg-gray-50 rounded-lg mt-4">
     <table class="font-inter min-w-full text-gray-900 table" id="menu-table">
         <thead class="rounded-lg text-left text-sm font-normal">
         <tr>
@@ -62,10 +62,10 @@
         {% for menu in menu_items %}
         <tr
         class="w-full border-b border-gray-400 py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg">
-            <td class="px-4 py-3 font-medium whitespace-nowrap">{{ menu.name }}</td>
-            <td class="px-4 py-3 font-medium whitespace-nowrap">{{ menu.price }}</td>
-            <td class="px-4 py-3 font-medium truncate max-w-3xs">{{ menu.description }}</td>
-            <td class="px-4 py-3 font-medium whitespace-nowrap text-center">{{ menu.category }}</td>
+            <td class="px-4 py-3 whitespace-nowrap">{{ menu.name }}</td>
+            <td class="px-4 py-3 whitespace-nowrap">{{ menu.price }}</td>
+            <td class="px-4 py-3 truncate max-w-3xs">{{ menu.description }}</td>
+            <td class="px-4 py-3 whitespace-nowrap text-center">{{ menu.category }}</td>
             <td class="relative py-3 px-4 max-w-24">
                 <div class="flex justify-end gap-3 ">
                     <a href="{% url 'update-menu' menu.id %}" class="button-secondary">

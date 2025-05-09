@@ -2,7 +2,7 @@ from decimal import Decimal
 
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.views.generic import View
 from rich import print
 
@@ -20,20 +20,30 @@ class ListOrder(LoginRequiredMixin, View):
 
 class CreateOrder(LoginRequiredMixin, View):
     login_url = "/login/"
-    context = {}
+    breadcrumbs = [
+        {"label": "Orders", "href": "/order/", "active": False},
+        {"label": "Create Order", "href": "/order/create/", "active": True},
+    ]
+    breadcrumbs_description = "Add a new order to your collection."
+    context = {
+        "breadcrumbs": breadcrumbs,
+        "breadcrumbs_description": breadcrumbs_description,
+    }
 
     def get(self, request):
         payment_methods = Order.PaymentMethod.choices
         menu_items = MenuItem.objects.all()
 
-        self.context["menu_items"] = menu_items
-        self.context["payment_methods"] = payment_methods
+        context = self.context
+        context.update({"payment_methods": payment_methods, "menu_items": menu_items})
 
-        return render(request, "orders/create/page.html", self.context)
+        return render(request, "orders/create/page.html", context)
 
     def post(self, request):
         data = request.POST.dict()
         context = self.context
+        payment_methods = Order.PaymentMethod.choices
+        menu_items = MenuItem.objects.all()
 
         if (
             not data.get("customer_name")
@@ -41,11 +51,13 @@ class CreateOrder(LoginRequiredMixin, View):
             or not data.get("payment_method")
         ):
             messages.error(request, "Please fill out all required fields.")
-            return render(request, "orders/create/page.html", dict(context, **data))
+            context.update({"payment_methods": payment_methods, "menu_items": menu_items, "form_data": data})
+            return render(request, "orders/create/page.html", context)
 
         if not data.get("id_0"):
             messages.error(request, "Please add at least one item to the order list.")
-            return render(request, "orders/create/page.html", dict(context, **data))
+            context.update({"payment_methods": payment_methods, "menu_items": menu_items, "form_data": data})
+            return render(request, "orders/create/page.html", context)
 
         # Create the order
         order = Order.objects.create(
@@ -77,11 +89,11 @@ class CreateOrder(LoginRequiredMixin, View):
             except Exception as e:
                 messages.error(request, f"Error processing item {index}: {e}")
                 order.delete()
+                context.update({"payment_methods": payment_methods, "menu_items": menu_items, "form_data": data})
                 return render(request, "orders/create/page.html", context)
 
             index += 1
 
         messages.success(request, "Order created successfully.")
 
-        context["form_data"] = {}
-        return render(request, "orders/create/page.html", context)
+        return redirect("create-order")
