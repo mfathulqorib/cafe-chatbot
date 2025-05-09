@@ -1,0 +1,101 @@
+{% extends 'menu/layout.html' %}
+{% block menu_content %}
+<div class="flex w-full items-center justify-between">
+    <h1 class="text-2xl font-lusitana text-gray-900">Menus</h1>
+</div>
+<div id="menu-filter" class="flex items-center justify-between gap-2 mt-8">
+    <div class="relative flex flex-1 flex-shrink-0">
+        <form method="get" class="flex items-center gap-2 w-full">
+            <div class="flex-1">
+                <label for="id_category" class="sr-only">Filter by category</label>
+                <select name="category" id="id_category" class="peer block w-full rounded-md border border-gray-500 py-[9px] px-3 text-sm">
+                    <option value="">All Categories</option>
+                    {% for key, value in categories %}
+                    <option value="{{ key }}" {% if request.GET.category == key %}selected{% endif %}>{{ value }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="button-secondary h-10">
+                <span>Filter</span>
+            </button>
+            {% if request.GET.category %}
+            <a href="{% url 'list-menu' %}" class="button-danger h-10">
+                <span>Clear</span>
+            </a>
+            {% endif %}
+        </form>
+    </div>
+</div>
+<div class="mt-4 w-full">
+    <a
+    href="{% url 'create-menu' %}"
+    class="button-primary h-10"
+    >
+    <span class="block">Create Menu</span>
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 ml-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+    </svg>
+    </a>
+</div>
+<div class="p-2 bg-gray-50 rounded-lg mt-4">
+    <table class="font-inter min-w-full text-gray-900 table" id="menu-table">
+        <thead class="rounded-lg text-left text-sm font-normal">
+        <tr>
+            <th scope="col" class="px-4 py-3 font-medium">
+            Menu name
+            </th>
+            <th scope="col" class="px-4 py-3 font-medium">
+            Price
+            </th>
+            <th scope="col" class="px-4 py-3 font-medium">
+            Description
+            </th>
+            <th scope="col" class="px-4 py-3 font-medium text-center">
+            Category
+            </th>
+            <th scope="col" class="relative py-3 pl-6 pr-3">
+            <span class="sr-only">Edit</span>
+            </th>
+        </tr>
+        </thead>
+        <tbody class="bg-white">
+        {% for menu in menu_items %}
+        <tr
+        class="w-full border-b border-gray-400 py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg">
+            <td class="px-4 py-3 font-medium whitespace-nowrap">{{ menu.name }}</td>
+            <td class="px-4 py-3 font-medium whitespace-nowrap">{{ menu.price }}</td>
+            <td class="px-4 py-3 font-medium truncate max-w-3xs">{{ menu.description }}</td>
+            <td class="px-4 py-3 font-medium whitespace-nowrap text-center">{{ menu.category }}</td>
+            <td class="relative py-3 px-4 max-w-24">
+                <div class="flex justify-end gap-3 ">
+                    <a href="{% url 'update-menu' menu.id %}" class="button-secondary">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        </svg>
+                    </a>
+                    <a href="{% url 'delete-menu' menu.id %}" class="button-danger">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                    </a>
+                </div>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% if not menu_items %}
+    <div class="p-2 bg-gray-50 rounded-lg mt-6">
+        {% include "menu/components/empty-state.html" %}
+    </div>
+    {% endif %}
+</div>
+
+{% if is_paginated %}
+{% include "shared/components/pagination.html" with page_obj=page_obj %}
+{% endif %}
+
+<div class="mt-6">
+    {% include "shared/components/messages.html" %}
+</div>
+{% endblock %}

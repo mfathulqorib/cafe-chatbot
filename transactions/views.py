@@ -9,6 +9,16 @@ from rich import print
 from menu.models import MenuItem
 from transactions.models import Transaction, TransactionItem
 
+from .models import Transaction
+
+
+class ListTransaction(LoginRequiredMixin, View):
+    login_url = "/login/"
+
+    def get(self, request):
+        transactions = Transaction.objects.all()
+        return render(request, "transactions/page.html", {"transactions": transactions})
+
 
 class CreateTransaction(LoginRequiredMixin, View):
     login_url = "/login/"

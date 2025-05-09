@@ -1,21 +1,16 @@
-{% extends 'base.html' %}
+{% extends 'menu/layout.html' %}
 {% load static %}
 
-{% block content %}
+{% block menu_content %}
 <script src="{% static 'script/alpinejs/priceFormater.js' %}"></script>
-<div class="max-w-2xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-    <div class="bg-white shadow overflow-hidden rounded-lg">
-        <div class="px-4 py-5 sm:px-6">
-            <h1 class="text-2xl font-semibold text-gray-900">Create Menu</h1>
-            <p class="mt-1 text-sm text-gray-500">Add a new menu item to your collection.</p>
-        </div>
-        <div class="px-4 py-5 sm:p-6">
-            {% include 'shared/components/messages.html' %}
+{% include 'shared/components/breadcrumbs.html' with breadcrumbs=breadcrumbs %}
 
+<div class="w-full mx-auto my-8">
+    <div class="bg-gray-50 shadow overflow-hidden rounded-lg">
+        <div class="p-6">
             <form method="post">
                 {% csrf_token %}
-                
-                <div class="space-y-6">
+                <div class="space-y-6 mb-5">
                     <!-- Name Field -->
                     {% include 'menu/components/input.html' with label="Name" field="name" placeholder="Menu item name" value=name %}
                     
@@ -28,19 +23,22 @@
                     <!-- Category Field -->
                     {% include 'shared/components/select.html' with label="Category" id="category" name="category" default_option="Select menu category" options=categories input_value=category%}
                 </div>
-                <div class="pt-5">
+                <div>
                     <div class="flex justify-end space-x-3">
-                        <button type="button" class="button-secondary">
+                        <a href="{% url 'list-menu' %}" class="button-secondary">
                             Cancel
-                        </button>
+                        </a>
                         <button type="submit" class="button-primary">
-                            Create Menu Item
+                            {% if menu_id %}Update Menu Item{% else %}Create Menu Item{% endif %}
                         </button>
                     </div>
                 </div>
             </form>
         </div>
         </div>
+    </div>
+    <div>
+      {% include 'shared/components/messages.html' %}
     </div>
 </div>
 {% endblock %}

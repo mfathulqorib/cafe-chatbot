@@ -1,0 +1,17 @@
+<nav aria-label="Breadcrumb" class="mb-2 block">
+    <ol class=" font-lusitana flex text-2xl">
+      {% for breadcrumb in breadcrumbs %}
+        <li
+          key="{{breadcrumb.href}}"
+          aria-current="{{breadcrumb.active}}"
+          class="{% if breadcrumb.active %}text-gray-900{% else %}text-gray-500{% endif %}"
+        >
+          <a href="{{breadcrumb.href}}">{{breadcrumb.label}}</a>
+          {% if not forloop.last %}
+            <span class="ml-1 mr-2 inline-block">/</span>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ol>
+</nav>
+<p class="text-sm text-gray-500">{{ breadcrumbs_description }}</p>

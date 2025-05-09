@@ -166,7 +166,7 @@ class ChatManager {
         messageDiv.id = role === 'typing-indicator' ? 'typing-indicator' : '';
         
         const messageContent = `
-            <div class="${role === 'user' ? 'mr-2 bg-blue-500' : 'ml-2 bg-gray-100'} rounded-lg py-2 px-4 max-w-[75%]">
+            <div class="${role === 'user' ? 'mr-2 bg-blue-500' : 'ml-2 bg-gray-50'} rounded-lg py-2 px-4 max-w-[75%]">
                 <p id="${this.latestId}" class="${role === 'user' ? 'text-white' : 'text-gray-800'}">${content}</p>
             </div>
         `;

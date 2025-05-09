@@ -1,0 +1,56 @@
+<div class="mt-6 flex justify-center">
+    <nav class="flex items-center justify-between px-4" aria-label="Pagination">
+        <div class="-mt-px flex">
+            {% if page_obj.has_previous %}
+            <a href="?{% if request.GET.category %}category={{ request.GET.category }}&{% endif %}page={{ page_obj.previous_page_number }}" class="button-secondary mr-4 p-2">
+                <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M18 10a.75.75 0 01-.75.75H4.66l2.1 1.95a.75.75 0 11-1.02 1.1l-3.5-3.25a.75.75 0 010-1.1l3.5-3.25a.75.75 0 111.02 1.1l-2.1 1.95h12.59A.75.75 0 0118 10z" clip-rule="evenodd" />
+                </svg>
+            </a>
+            {% else %}
+            <span class="button-secondary cursor-not-allowed mr-4 p-2">
+                <svg class="h-5 w-5 text-gray-200" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M18 10a.75.75 0 01-.75.75H4.66l2.1 1.95a.75.75 0 11-1.02 1.1l-3.5-3.25a.75.75 0 010-1.1l3.5-3.25a.75.75 0 111.02 1.1l-2.1 1.95h12.59A.75.75 0 0118 10z" clip-rule="evenodd" />
+                </svg>
+            </span>
+            {% endif %}
+            
+            {% for i in page_obj.paginator.page_range %}
+                {% if i > page_obj.number|add:'-3' and i < page_obj.number|add:'3' %}
+                    {% if page_obj.number == i %}
+                    <!-- Current page -->
+                    <a href="#" aria-current="page" class="button-primary p-2 h-10 w-10 text-center
+                        {% if i == 1 %}rounded-tr-none rounded-br-none
+                        {% elif i == page_obj.paginator.num_pages %}rounded-tl-none rounded-bl-none
+                        {% else %}rounded-none{% endif %}">
+                        {{ i }}
+                    </a>
+                    {% else %}
+                    <!-- Other pages -->
+                    <a href="?{% if request.GET.category %}category={{ request.GET.category }}&{% endif %}page={{ i }}" 
+                        class="button-secondary p-2 h-10 w-10 text-center
+                        {% if i == 1 or i == page_obj.number|add:'-2' %}rounded-tr-none rounded-br-none
+                        {% elif i == page_obj.paginator.num_pages or i == page_obj.number|add:'2' %}rounded-tl-none rounded-bl-none
+                        {% else %}rounded-none{% endif %}">
+                        {{ i }}
+                    </a>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+            
+            {% if page_obj.has_next %}
+            <a href="?{% if request.GET.category %}category={{ request.GET.category }}&{% endif %}page={{ page_obj.next_page_number }}" class="button-secondary ml-4 p-2">
+                <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M2 10a.75.75 0 01.75-.75h12.59l-2.1-1.95a.75.75 0 111.02-1.1l3.5 3.25a.75.75 0 010 1.1l-3.5 3.25a.75.75 0 11-1.02-1.1l2.1-1.95H2.75A.75.75 0 012 10z" clip-rule="evenodd" />
+                </svg>
+            </a>
+            {% else %}
+            <span class="button-secondary cursor-not-allowed ml-4 p-2">
+                <svg class="h-5 w-5 text-gray-200" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M2 10a.75.75 0 01.75-.75h12.59l-2.1-1.95a.75.75 0 111.02-1.1l3.5 3.25a.75.75 0 010 1.1l-3.5 3.25a.75.75 0 11-1.02-1.1l2.1-1.95H2.75A.75.75 0 012 10z" clip-rule="evenodd" />
+                </svg>
+            </span>
+            {% endif %}
+        </div>
+    </nav>
+</div>

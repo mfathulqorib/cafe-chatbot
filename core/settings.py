@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "huey.contrib.djhuey",
     "channels",
+    "django_filters",
     "transactions",
     "menu",
     "chats",
