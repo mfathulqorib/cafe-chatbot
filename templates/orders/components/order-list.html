@@ -1,0 +1,49 @@
+<table class="font-inter min-w-full text-gray-900 table" id="menu-table">
+    <thead class="rounded-lg text-left text-sm font-normal">
+    <tr>
+        <th scope="col" class="px-4 py-3 font-medium">
+        Customer
+        </th>
+        <th scope="col" class="px-4 py-3 font-medium">
+        Phone
+        </th>
+        <th scope="col" class="px-4 py-3 font-medium">
+        Datetime
+        </th>
+        <th scope="col" class="px-4 py-3 font-medium">
+        Total Amount
+        </th>
+        <th scope="col" class="px-4 py-3 font-medium text-center">
+        Payment Method
+        </th>
+        <th scope="col" class="relative py-3 pl-6 pr-3">
+        <span class="sr-only">Edit</span>
+        </th>
+    </tr>
+    </thead>
+    <tbody class="bg-white">
+    {% for order in orders %}
+    <tr class="w-full border-b border-gray-400 py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg">
+        <td class="px-4 py-3 whitespace-nowrap">{{ order.customer_name }}</td>
+        <td class="px-4 py-3 whitespace-nowrap">{{ order.customer_phone|default:"-" }}</td>
+        <td class="px-4 py-3 whitespace-nowrap">{{ order.formatted_date }}</td>
+        <td class="px-4 py-3 truncate max-w-3xs">{{ order.total_amount }}</td>
+        <td class="px-4 py-3 whitespace-nowrap text-center">{{ order.payment_method.title }}</td>
+        <td class="relative py-3 px-4 max-w-24">
+            <div class="flex justify-end gap-3 ">
+                <a href="{% url 'update-order' order.id %}" class="button-secondary p-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    </svg>
+                </a>
+                <a href="{% url 'delete-order' order.id %}" class="button-danger p-2" onclick="return confirm('Are you sure you want to delete this order? This action cannot be undone.');">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                </a>
+            </div>
+        </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>

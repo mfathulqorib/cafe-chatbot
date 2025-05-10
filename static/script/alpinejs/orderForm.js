@@ -1,5 +1,5 @@
 // transaction-form.js
-function orderForm(menuItems, formData = {}) {
+function orderForm(menuItems, order_items = []) {
     // Constants
     const PHONE_NUMBER_MAX_LENGTH = 12;
     const ALLOWED_PHONE_CHARS = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.'];
@@ -8,17 +8,7 @@ function orderForm(menuItems, formData = {}) {
     const inputMenuItem = document.getElementById('menu-item');
     
     // Initialize items from form data
-    const items = [];
-    let index = 0;
-    while (`id_${index}` in formData) {
-        items.push({
-            id: formData[`id_${index}`],
-            name: formData[`name_${index}`],
-            price: parseInt(formData[`price_${index}`], 10),
-            qty: parseInt(formData[`quantity_${index}`], 10)
-        });
-        index++;
-    }
+    const items = order_items;
       
     return {
         // State
@@ -54,7 +44,7 @@ function orderForm(menuItems, formData = {}) {
                 inputMenuItem.focus();
                 return;
             }
-  
+
             this.showWarning = false;
             const existingItem = this.items.find(i => i.id === this.selectedItemId);
 

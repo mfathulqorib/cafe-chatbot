@@ -17,7 +17,11 @@ class MenuItem(BaseModel):
     category = models.CharField(max_length=20, choices=Category.choices)
 
     def __str__(self):
-        return f"{self.name} - {self.category.title()} ({self.formatted_price()})"
+        return f"{self.name} - {self.get_category_display()} ({self.formatted_price()})"
 
     def formatted_price(self):
         return f"Rp {int(self.price):,}".replace(",", ".")
+    
+    def get_category_display(self):
+        return self.Category(self.category).label
+    

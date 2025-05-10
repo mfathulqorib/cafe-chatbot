@@ -60,6 +60,7 @@
     <div class="flex justify-end">
       <div class="text-base font-medium text-gray-900">Total:</div>
       <div class="text-base font-medium text-gray-900 ml-4" x-text="formatCurrency(calculateTotal())"></div>
+      <input type="hidden" name="total_amount" :value="calculateTotal()">
     </div>
   </div>
 </div>

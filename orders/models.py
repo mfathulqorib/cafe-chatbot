@@ -11,11 +11,12 @@ class Order(BaseModel):
         CREDIT = "credit", "Credit"
         QRIS = "qris", "QRIS"
 
-    date = models.DateTimeField(auto_now_add=True)
+    date = models.DateTimeField()
     customer_name = models.CharField(max_length=50)
     customer_phone = models.CharField(max_length=15, blank=True, null=True)
     items = models.ManyToManyField(MenuItem, through="OrderItem")
     payment_method = models.CharField(max_length=10, choices=PaymentMethod.choices)
+    total_amount = models.DecimalField(max_digits=18, decimal_places=2, null=True, blank=True)
 
     def __str__(self):
         return f"Order {self.customer_name} on {self.date.strftime('%Y-%m-%d %H:%M')}"

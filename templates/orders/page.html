@@ -1,8 +1,50 @@
-{% extends 'base.html' %}
-{% block content %}
+{% extends 'orders/layout.html' %}
+{% block orders_content %}
 
-<div class="w-full h-full bg-red-300">
-
+<div class="flex w-full items-center justify-between">
+    <h1 class="text-2xl font-lusitana text-gray-900">Orders</h1>
 </div>
-
+<div id="menu-filter" class="flex items-center justify-between gap-2 mt-8">
+    <div class="relative flex flex-1 flex-shrink-0">
+        <form method="get" class="flex items-center gap-2 w-full">
+            <div class="flex-1">
+                <label for="id_date" class="sr-only">Filter by date</label>
+               <input type="date" name="date" id="id_date" class="peer block w-full rounded-md border border-gray-500 py-[9px] px-3 text-sm" value="{{ request.GET.date }}">
+            </div>
+            <button type="submit" class="button-secondary h-10">
+                <span>Filter</span>
+            </button>
+            {% if request.GET.date %}
+            <a href="{% url 'list-order' %}" class="button-danger h-10">
+                <span>Clear</span>
+            </a>
+            {% endif %}
+        </form>
+    </div>
+</div>
+<div class="mt-4 w-full">
+    <a
+    href="{% url 'create-order' %}"
+    class="button-primary h-10"
+    >
+    <span class="block">Create Order</span>
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 ml-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+    </svg>
+    </a>
+</div>
+<div class="px-3 py-2 bg-gray-50 rounded-lg mt-4">
+    {% include "orders/components/order-list.html" with orders=orders %}
+    {% if not orders %}
+    <div class="p-2 bg-gray-50 rounded-lg mt-6">
+        {% include "orders/components/empty-state.html" with description="No orders added yet" additional_description="Add orders to your order list." %}
+    </div>
+    {% endif %}
+</div>
+<div class="mt-6">
+    {% include 'shared/components/messages.html' %}
+</div>
+{% if is_paginated %}
+    {% include "shared/components/pagination.html" with page_obj=page_obj %}
+{% endif %}
 {% endblock %}

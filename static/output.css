@@ -886,6 +886,9 @@
   .pr-3 {
     padding-right: calc(var(--spacing) * 3);
   }
+  .pb-6 {
+    padding-bottom: calc(var(--spacing) * 6);
+  }
   .pl-6 {
     padding-left: calc(var(--spacing) * 6);
   }

@@ -80,6 +80,7 @@ class CreateMenu(LoginRequiredMixin, View):
         context.update(self.context)
 
         menu_data = {
+            "actor": request.user if request.user.is_authenticated else None,
             "name": data.get("name"),
             "price": data.get("price").replace(".", ""),
             "description": data.get("description"),
@@ -124,6 +125,7 @@ class UpdateMenu(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         menu_id = kwargs.get("id")
         menu = MenuItem.objects.get(id=menu_id)
+
         categories = MenuItem.Category.choices
 
         context = self.context

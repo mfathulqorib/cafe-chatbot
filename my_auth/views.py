@@ -53,7 +53,6 @@ class RegisterView(View):
         password_revalidation = data.get("password_revalidation")
 
         if password != password_revalidation:
-            print(data)
             messages.error(request, "Passwords do not match. Please try again.")
             return render(request, self.template_page, data)
 

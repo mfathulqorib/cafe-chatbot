@@ -2,10 +2,10 @@
 {% load static %}
 
 {% block orders_content %}
-{{ form_data|json_script:"form-data" }}
+{{ order_items|json_script:"order-items" }}
 <script src="{% static 'script/alpinejs/orderForm.js' %}"></script>
 <script>
-    const formData = JSON.parse(document.getElementById('form-data').textContent) || {};
+    const orderItems = JSON.parse(document.getElementById('order-items').textContent) || [];
 
     // Create menuItemsData object from Django template
     const menuItemsData = {
@@ -22,26 +22,22 @@
 
 {% include 'shared/components/breadcrumbs.html' with breadcrumbs=breadcrumbs %}
 
-<div class="w-full mx-auto my-8">
-    <div class="bg-gray-50 shadow overflow-hidden rounded-lg">
+<div class="w-full mx-auto my-8 pb-6">
+    <div class="bg-gray-50 shadow overflow-hidden rounded-lg mb-6">
       <div class="p-6">
-        <!-- Error messages -->
-        {% include 'shared/components/messages.html' %}
-        
-        
-        <form method="post" x-data="orderForm(menuItemsData, formData)">
+        <form method="post" x-data="orderForm(menuItemsData, orderItems)">
           {% csrf_token %}
           
           <!-- Warning Message -->
           {% include 'orders/components/warning-message.html'%}
           
-          <div class="space-y-6">
+          <div class="space-y-6 mb-6">
             <!-- Date  -->
-            {% include 'orders/components/input.html' with label="Date" field="date" value=date type="datetime-local" is_required=True %}
+            {% include 'orders/components/input.html' with label="Date" field="date" type="datetime-local" is_required=True value=formatted_date_input %}
 
             <!-- Customer Name & Phone  -->
-            {% include 'orders/components/input.html' with label="Customer Name" field="customer_name" value=customer_name placeholder="Input customer name" is_required=True %}
-            {% include 'orders/components/input.html' with label="Customer phone (optional)" field="customer_phone" value=customer_phone placeholder="Input customer phone number" %}
+            {% include 'orders/components/input.html' with label="Customer Name" field="customer_name" value=customer_name placeholder="Input customer name" is_required=True value=customer_name %}
+            {% include 'orders/components/input.html' with label="Customer phone (optional)" field="customer_phone" value=customer_phone placeholder="Input customer phone number" value=customer_phone %}
 
             <!-- Menu Items Selection -->
             {% include 'orders/components/select-items.html' with options=menu_items%}
@@ -49,28 +45,30 @@
             <!-- Selected Items -->
             <div id="selected-items" x-show="items.length > 0" class="my-2">
               <h3 class="text-lg font-medium text-gray-900 mb-3">Selected Items</h3>
-              {% include 'orders/components/table.html' with items=items%}
+              {% include 'orders/components/order-items.html' with items=items%}
             </div>
           
             <!-- Empty State -->
-            {% include 'orders/components/empty-state.html'%}
+            {% include 'orders/components/empty-state.html' with description="No items added yet" additional_description="Select items from the menu to add them to your order." %}
 
             <!-- Payment Method -->
-            {% include 'shared/components/select.html' with label="Payment Method" id="payment_method" name="payment_method" default_option="Select payment method" options=payment_methods input_value=payment_method is_required=True %}
+            {% include 'shared/components/select.html' with label="Payment Method" id="payment_method" name="payment_method" default_option="Select payment method" options=payment_methods input_value=payment_method is_required=True input_value=payment_method %}
           </div>
 
-          <div class="mt-8 flex justify-end space-x-3">
-            <button type="button" class="button-secondary">
+          <div class="flex justify-end space-x-3">
+            <a href="{% url 'list-order' %}" class="button-secondary">
               Cancel
-            </button>
+            </a>
             <button type="submit" class="button-primary">
-              Submit Order
+              {% if id %}Update{% else %}Submit{% endif %}
+              Order
             </button>
           </div>
-          
         </form>
-        
       </div>
+    </div>
+    <div >
+      {% include 'shared/components/messages.html' %}
     </div>
 </div>
 {% endblock %}

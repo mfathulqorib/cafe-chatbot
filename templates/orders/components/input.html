@@ -7,7 +7,11 @@
             name="{{ field }}" 
             class="bg-white shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md p-2"
             placeholder="{{placeholder|default:''}}" 
-            value="{{value|default:''}}"
+            {% if field == "date" and now %}
+                value="{{now}}"
+            {% else %}
+                value="{{value|default:''}}"
+            {% endif %}
             {% if is_required|default:False %}required{% endif %}
             {% if field == "customer_phone" %}
             @keypress="phoneNumberValidation"
